@@ -8,6 +8,7 @@
 // and displays a corresponding message in the center of the [Scaffold].
 
 import 'package:flutter/material.dart';
+import 'package:tripfinder/trips.dart';
 
 void main() => runApp(const MyApp());
 
@@ -99,19 +100,190 @@ class Home extends StatefulWidget {
 
 class _Home extends State<Home> {
 
+  List<Trips> lTrips = [
+    Trips(1, "Moliceiros", "content1", "https://i2.wp.com/www.portugalnummapa.com/wp-content/uploads/2015/02/moliceiros-na-ria-de-aveiro-e1424799989448.jpg?fit=700%2C498&ssl=1", "link1"),
+    Trips(2, "Salinas", "content2", "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Aveiro-Marais_salants-1967_07_29_29.jpg/1200px-Aveiro-Marais_salants-1967_07_29_29.jpg", "link2"),
+    Trips(3, "Gastronomia", "content3", "https://media-cdn.tripadvisor.com/media/photo-s/0d/43/90/9b/polvo-a-lagareiro.jpg", "link3")
+  ];
+
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
+  static const TextStyle contentStyle =
+      TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black);
+
+  static const TextStyle tripTitleStyle =
+      TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue);
+
   @override
   Widget build(BuildContext context){
-    return const Scaffold(
+    return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Align(
-          child: Text(
-            'Home Page',
-            style: optionStyle,
-          ),
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Row(
+              children: [
+                Text('Nearby Trips', style: optionStyle),
+                Spacer(),
+                Text('Aveiro', style: tripTitleStyle),
+              ]
+            ),
+            Container(
+              height: 100,
+              decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.white,), borderRadius: const BorderRadius.all(Radius.circular(20))),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  //The image
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              alignment: FractionalOffset.topCenter,
+                              image: NetworkImage(lTrips[0].imageurl))),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0, top: 10.0),
+                      child: Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            //The title
+                            Text(
+                              lTrips[0].title,
+                              textAlign: TextAlign.left,
+                              style: tripTitleStyle
+                            ),
+                            //The content
+                            Text(
+                              lTrips[0].content,
+                              maxLines: 2,
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.ellipsis,
+                              style: contentStyle
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+
+            Container(
+              height: 100,
+              decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.white,), borderRadius: const BorderRadius.all(Radius.circular(20))),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  //The image
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              alignment: FractionalOffset.topCenter,
+                              image: NetworkImage(lTrips[1].imageurl))),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0, top: 10.0),
+                      child: Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            //The title
+                            Text(
+                              lTrips[1].title,
+                              textAlign: TextAlign.left,
+                              style: tripTitleStyle
+                            ),
+                            //The content
+                            Text(
+                              lTrips[1].content,
+                              maxLines: 2,
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.ellipsis,
+                              style: contentStyle
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+
+            Container(
+              height: 100,
+              decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.white,), borderRadius: const BorderRadius.all(Radius.circular(20))),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  //The image
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              alignment: FractionalOffset.topCenter,
+                              image: NetworkImage(lTrips[2].imageurl))),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0, top: 10.0),
+                      child: Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            //The title
+                            Text(
+                              lTrips[2].title,
+                              textAlign: TextAlign.left,
+                              style: tripTitleStyle
+                            ),
+                            //The content
+                            Text(
+                              lTrips[2].content,
+                              maxLines: 2,
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.ellipsis,
+                              style: contentStyle
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+
+          ],
         ),
       ),
     );
