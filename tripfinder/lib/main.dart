@@ -8,6 +8,8 @@
 // and displays a corresponding message in the center of the [Scaffold].
 
 import 'package:flutter/material.dart';
+import 'package:tripfinder/profile.dart';
+import 'package:tripfinder/trippage.dart';
 import 'package:tripfinder/trips.dart';
 
 void main() => runApp(const MyApp());
@@ -22,21 +24,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: _title,
-      home: MyStatefulWidget(),
+      home: MyNavBar(),
     );
   }
 }
 
 /// This is the stateful widget that the main application instantiates.
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({Key? key}) : super(key: key);
+class MyNavBar extends StatefulWidget {
+  const MyNavBar({Key? key}) : super(key: key);
 
   @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+  State<MyNavBar> createState() => _MyNavBar();
 }
 
 /// This is the private State class that goes with MyStatefulWidget.
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+class _MyNavBar extends State<MyNavBar> {
   int _selectedIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
     Home(title: 'Home'),
@@ -89,77 +91,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   }
 }
 
-class TripPage extends StatefulWidget {
-  const TripPage({Key? key, required this.trip}) : super(key: key);
-
-  final Trips trip;
-
-  @override
-  State<TripPage> createState() => _TripPage(trip);
-}
-
-class _TripPage extends State<TripPage> {
-
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-
-  static const TextStyle contentStyle =
-      TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black);
-
-  final ButtonStyle style =
-        ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
-
-  _TripPage(this.trip);
-
-  final Trips trip;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('TripFinder'),
-        backgroundColor: Colors.black,
-      ),
-      body: Center(child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: 
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text("Trip: " + trip.title, style: optionStyle, textAlign: TextAlign.center),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  alignment: Alignment.center,
-                  width: 250,
-                  height: 200,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.cover,
-                          alignment: FractionalOffset.topCenter,
-                          image: NetworkImage(trip.imageurl))),
-                ),
-              ),
-
-              Text("Details: " + trip.content, style: contentStyle, textAlign: TextAlign.center),
-
-              const SizedBox(height: 30),
-              ElevatedButton(
-                style: style,
-                onPressed: () {},
-                child: const Text(' Start Trip '),
-              ),
-
-            ]
-          ),
-      )
-    ),
-    );
-  }
-}
-
 class Home extends StatefulWidget {
   const Home({Key? key, required this.title}) : super(key: key);
 
@@ -172,16 +103,28 @@ class Home extends StatefulWidget {
 class _Home extends State<Home> {
 
   List<Trips> lTrips = [
-    Trips(1, "Moliceiros", "content1", "https://i2.wp.com/www.portugalnummapa.com/wp-content/uploads/2015/02/moliceiros-na-ria-de-aveiro-e1424799989448.jpg?fit=700%2C498&ssl=1", "link1"),
-    Trips(2, "Salinas", "content2", "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Aveiro-Marais_salants-1967_07_29_29.jpg/1200px-Aveiro-Marais_salants-1967_07_29_29.jpg", "link2"),
-    Trips(3, "Gastronomia", "content3", "https://media-cdn.tripadvisor.com/media/photo-s/0d/43/90/9b/polvo-a-lagareiro.jpg", "link3")
+    Trips(1, "Ria de Aveiro",
+      "Passeio ao longo da Ria de Aveiro",
+      "Passeio ao longo da Ria de Aveiro, desfrute desta maravilhosa experiência passando por diversos locais de interesse em Aveiro como o Fórum e a Praça do Peixe.",
+      "https://i2.wp.com/www.portugalnummapa.com/wp-content/uploads/2015/02/moliceiros-na-ria-de-aveiro-e1424799989448.jpg?fit=700%2C498&ssl=1"
+    ),
+    Trips(2, "Salinas", 
+      "Visita ás Salinas de Aveiro", 
+      "content2", 
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Aveiro-Marais_salants-1967_07_29_29.jpg/1200px-Aveiro-Marais_salants-1967_07_29_29.jpg"
+    ),
+    Trips(3, "Gastronomia", 
+      "Visita ás melhores ofertas gastronómicas de Aveiro", 
+      "content3", 
+      "https://media-cdn.tripadvisor.com/media/photo-s/0d/43/90/9b/polvo-a-lagareiro.jpg"
+    )
   ];
 
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static const TextStyle contentStyle =
-      TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black);
+      TextStyle(fontSize: 15, color: Colors.grey);
 
   static const TextStyle tripTitleStyle =
       TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue);
@@ -233,9 +176,10 @@ class _Home extends State<Home> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 8.0, top: 10.0),
+                      padding: const EdgeInsets.only(right: 8.0),
                       child: Container(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisSize: MainAxisSize.max,
                           children: [
@@ -247,7 +191,7 @@ class _Home extends State<Home> {
                             ),
                             //The content
                             Text(
-                              lTrips[0].content,
+                              lTrips[0].contentShort,
                               maxLines: 2,
                               textAlign: TextAlign.left,
                               overflow: TextOverflow.ellipsis,
@@ -285,9 +229,10 @@ class _Home extends State<Home> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 8.0, top: 10.0),
+                      padding: const EdgeInsets.only(right: 8.0),
                       child: Container(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisSize: MainAxisSize.max,
                           children: [
@@ -299,7 +244,7 @@ class _Home extends State<Home> {
                             ),
                             //The content
                             Text(
-                              lTrips[1].content,
+                              lTrips[1].contentShort,
                               maxLines: 2,
                               textAlign: TextAlign.left,
                               overflow: TextOverflow.ellipsis,
@@ -336,9 +281,10 @@ class _Home extends State<Home> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 8.0, top: 10.0),
+                      padding: const EdgeInsets.only(right: 8.0),
                       child: Container(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisSize: MainAxisSize.max,
                           children: [
@@ -350,7 +296,7 @@ class _Home extends State<Home> {
                             ),
                             //The content
                             Text(
-                              lTrips[2].content,
+                              lTrips[2].contentShort,
                               maxLines: 2,
                               textAlign: TextAlign.left,
                               overflow: TextOverflow.ellipsis,
@@ -371,8 +317,6 @@ class _Home extends State<Home> {
     );
   }
 }
-
-
 
 class Stat extends StatefulWidget {
   const Stat({Key? key, required this.title}) : super(key: key);
@@ -428,65 +372,6 @@ class _Notification extends State<Notification> {
             'Notifications',
             style: optionStyle,
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class Profile extends StatefulWidget {
-  const Profile({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<Profile> createState() => _Profile();
-}
-
-class _Profile extends State<Profile> {
-
-  static const TextStyle headerStyle =
-  TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
-
-  static const TextStyle dataStyle =
-  TextStyle(fontSize: 15, fontWeight: FontWeight.bold);
-
-  @override
-  Widget build(BuildContext context){
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                const Text(
-                  'Olá Ricardo',
-                  style: headerStyle,
-                ),
-                const Spacer(),
-                Container(
-                  width: 120.0,
-                  height: 120.0,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: NetworkImage("https://i.imgur.com/xZ6Ahkx.jpg"),
-                    )
-                  ),
-                ),
-              ],
-            ),
-            const Text(''),
-            const Text(
-              'E-mail ',
-              style: dataStyle,
-            ),
-            const Text(
-              'ricardo@hotmail.com'
-            )
-          ],
         ),
       ),
     );

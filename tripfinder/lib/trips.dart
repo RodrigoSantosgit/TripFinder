@@ -1,8 +1,8 @@
 /// ************************************************
-/// ************ TRIPS ************************
+/// ***************** TRIPS ************************
 /// ************************************************
 class Trips {
   int id;
-  String title, content, imageurl, link;
-  Trips(this.id, this.title, this.content, this.imageurl, this.link);
+  String title, contentShort, contentFull, imageurl;
+  Trips(this.id, this.title, this.contentShort, this.contentFull, this.imageurl);
 }
