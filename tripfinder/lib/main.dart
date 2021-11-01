@@ -189,19 +189,48 @@ class Profile extends StatefulWidget {
 
 class _Profile extends State<Profile> {
 
-  static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static const TextStyle headerStyle =
+  TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
+
+  static const TextStyle dataStyle =
+  TextStyle(fontSize: 15, fontWeight: FontWeight.bold);
 
   @override
   Widget build(BuildContext context){
-    return const Scaffold(
+    return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Align(
-          child: Text(
-            'Profile',
-            style: optionStyle,
-          ),
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                const Text(
+                  'Olá Ricardo',
+                  style: headerStyle,
+                ),
+                const Spacer(),
+                Container(
+                  width: 120.0,
+                  height: 120.0,
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.fill,
+                        image: NetworkImage("https://i.imgur.com/xZ6Ahkx.jpg"),
+                    )
+                  ),
+                ),
+              ],
+            ),
+            const Text(''),
+            const Text(
+              'E-mail ',
+              style: dataStyle,
+            ),
+            const Text(
+              'ricardo@hotmail.com'
+            )
+          ],
         ),
       ),
     );
