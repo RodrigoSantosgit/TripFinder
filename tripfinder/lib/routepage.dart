@@ -12,11 +12,8 @@ class RoutePage extends StatefulWidget {
 
 class _RoutePage extends State<RoutePage> {
 
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-
-  static const TextStyle contentStyle =
-      TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87);
+  static const TextStyle tripTitleStyle =
+  TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue);
 
   final ButtonStyle style =
         ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
@@ -32,7 +29,21 @@ class _RoutePage extends State<RoutePage> {
         title: const Text('TripFinder'),
         backgroundColor: Colors.black,
       ),
-      body: const Center( child: Text("Mapa: TODO"), ),
+      body:
+       Center( child: Padding(
+      padding: const EdgeInsets.all(20.0),
+        child: Column(
+            children: [
+              Text(
+                  trip.title,
+                  textAlign: TextAlign.left,
+                  style: tripTitleStyle
+              ),
+              const Text("Mapa: TODO"),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -21,8 +21,10 @@ class _TripPage extends State<TripPage> {
   static const TextStyle contentStyle =
       TextStyle(fontSize: 15, color: Colors.black);
 
-  final ButtonStyle style =
-        ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
+  final ButtonStyle buttonStyle =
+  ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      textStyle: const TextStyle(fontSize: 15),
+      primary: Colors.blue, onPrimary: Colors.white);
 
   _TripPage(this.trip);
 
@@ -62,7 +64,7 @@ class _TripPage extends State<TripPage> {
 
               const SizedBox(height: 30),
               ElevatedButton(
-                style: style,
+                style: buttonStyle,
                 onPressed: () {
                   Navigator.push(
                   context,
