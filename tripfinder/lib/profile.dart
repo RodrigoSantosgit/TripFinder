@@ -26,7 +26,7 @@ class _Profile extends State<Profile> {
 
   final ButtonStyle buttonStyle =
   ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      textStyle: const TextStyle(fontSize: 15), minimumSize: const Size(150, 30),
+      textStyle: const TextStyle(fontSize: 15), minimumSize: const Size(150, 25),
       primary: Colors.blue, onPrimary: Colors.white);
 
   _Profile(this.user);
@@ -94,6 +94,7 @@ class _Profile extends State<Profile> {
               onPressed: () {},
               child: const Text('Preferences'),
             ),
+            const Text(''),
             TextButton(
               style: buttonStyle,
               onPressed: () {

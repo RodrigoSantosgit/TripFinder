@@ -71,7 +71,7 @@ class MapSampleState extends State<MapSample> {
           width: MediaQuery.of(context).size.width,
           child: GoogleMap(
             mapType: MapType.normal,
-            initialCameraPosition:  const CameraPosition(target: LatLng(40.712776, -74.005974), zoom: 12),
+            initialCameraPosition:  const CameraPosition(target: LatLng(40.628189, -8.652676), zoom: 12),
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
             },
