@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:tripfinder/profile.dart';
 import 'package:tripfinder/trippage.dart';
 import 'package:tripfinder/trips.dart';
+import 'package:tripfinder/user.dart';
 
 void main() => runApp(const MyApp());
 
@@ -39,12 +40,35 @@ class MyNavBar extends StatefulWidget {
 
 /// This is the private State class that goes with MyStatefulWidget.
 class _MyNavBar extends State<MyNavBar> {
+
   int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
-    Home(title: 'Home'),
-    Stat(title: 'Stats'),
-    Notification(title: 'Notification'),
-    Profile(title: 'Profile'),
+  static final List<Widget> _widgetOptions = <Widget>[
+    const Home(title: 'Home'),
+    Stat(user: Users(1, "Ricardo Silva", "ricardo@hotmail.com","password", "https://i.imgur.com/xZ6Ahkx.jpg",
+        [Trips(2, 10, "Salinas",
+            "Visita ás Salinas de Aveiro",
+            "content2",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Aveiro-Marais_salants-1967_07_29_29.jpg/1200px-Aveiro-Marais_salants-1967_07_29_29.jpg"
+        ),
+          Trips(3, 20, "Gastronomia",
+              "Visita ás melhores ofertas gastronómicas de Aveiro",
+              "content3",
+              "https://media-cdn.tripadvisor.com/media/photo-s/0d/43/90/9b/polvo-a-lagareiro.jpg"
+          )])
+    ),
+    const Notification(title: 'Notification'),
+    Profile(user: Users(1, "Ricardo Silva", "ricardo@hotmail.com","password", "https://i.imgur.com/xZ6Ahkx.jpg",
+        [Trips(2, 10, "Salinas",
+            "Visita ás Salinas de Aveiro",
+            "content2",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Aveiro-Marais_salants-1967_07_29_29.jpg/1200px-Aveiro-Marais_salants-1967_07_29_29.jpg"
+        ),
+          Trips(3, 20, "Gastronomia",
+              "Visita ás melhores ofertas gastronómicas de Aveiro",
+              "content3",
+              "https://media-cdn.tripadvisor.com/media/photo-s/0d/43/90/9b/polvo-a-lagareiro.jpg"
+          )])
+    ),
   ];
 
   void _onItemTapped(int index) {
@@ -103,17 +127,17 @@ class Home extends StatefulWidget {
 class _Home extends State<Home> {
 
   List<Trips> lTrips = [
-    Trips(1, "Ria de Aveiro",
+    Trips(1, 15,"Ria de Aveiro",
       "Passeio ao longo da Ria de Aveiro",
       "Passeio ao longo da Ria de Aveiro, desfrute desta maravilhosa experiência passando por diversos locais de interesse em Aveiro como o Fórum e a Praça do Peixe.",
       "https://i2.wp.com/www.portugalnummapa.com/wp-content/uploads/2015/02/moliceiros-na-ria-de-aveiro-e1424799989448.jpg?fit=700%2C498&ssl=1"
     ),
-    Trips(2, "Salinas", 
+    Trips(2, 10, "Salinas",
       "Visita ás Salinas de Aveiro", 
       "content2", 
       "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Aveiro-Marais_salants-1967_07_29_29.jpg/1200px-Aveiro-Marais_salants-1967_07_29_29.jpg"
     ),
-    Trips(3, "Gastronomia", 
+    Trips(3, 20, "Gastronomia",
       "Visita ás melhores ofertas gastronómicas de Aveiro", 
       "content3", 
       "https://media-cdn.tripadvisor.com/media/photo-s/0d/43/90/9b/polvo-a-lagareiro.jpg"
@@ -319,29 +343,80 @@ class _Home extends State<Home> {
 }
 
 class Stat extends StatefulWidget {
-  const Stat({Key? key, required this.title}) : super(key: key);
+  const Stat({Key? key, required this.user}) : super(key: key);
 
-  final String title;
+  final Users user;
 
   @override
-  State<Stat> createState() => _Stat();
+  State<Stat> createState() => _Stat(user);
 }
 
 class _Stat extends State<Stat> {
 
-  static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static const TextStyle headerStyle =
+  TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
+
+  static const TextStyle headerNameStyle =
+  TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue);
+
+  static const TextStyle typeStyle =
+  TextStyle(fontSize: 15, fontWeight: FontWeight.bold);
+
+  static const TextStyle valueStyle =
+  TextStyle(color: Colors.blue);
+
+  _Stat(this.user);
+  final Users user;
 
   @override
   Widget build(BuildContext context){
-    return const Scaffold(
+    return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Align(
-          child: Text(
-            'Stat Page',
-            style: optionStyle,
-          ),
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            SizedBox(
+                height:100,
+                child: Row(
+                  children: [
+                    Spacer(),
+                    const Text(
+                      'Statistics for ',
+                      style: headerStyle,
+                    ),
+                    Text(
+                        user.name,
+                        style: headerNameStyle
+                    ),
+                    Spacer()
+                  ],
+                )
+            ),
+            SizedBox(
+                height:100,
+                child: Column(
+                    children: <Widget>[
+                      const Text(
+                        'Ammount of trips made',
+                        style: typeStyle,
+                      ),
+                      Text(
+                        (user.trips).length.toString(),
+                        style: valueStyle,
+                      ),
+                      const Text(''),
+                      const Text(
+                          'Total Distance Traveled (in KM)',
+                          style: typeStyle
+                      ),
+                      Text(
+                          DistanceSum(user.trips).toString(),
+                          style: valueStyle
+                      )
+                    ]
+                )
+            ),
+          ],
         ),
       ),
     );
@@ -376,4 +451,13 @@ class _Notification extends State<Notification> {
       ),
     );
   }
+}
+
+int DistanceSum(List<Trips> trips){
+
+  int sum = 0;
+  for(int i=0;i< trips.length;i++){
+    sum += trips[i].distance;
+  }
+  return sum;
 }

@@ -5,12 +5,12 @@ import 'package:tripfinder/user.dart';
 import 'mytriplist.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({Key? key, required this.title}) : super(key: key);
+  const Profile({Key? key, required this.user}) : super(key: key);
 
-  final String title;
+  final Users user;
 
   @override
-  State<Profile> createState() => _Profile();
+  State<Profile> createState() => _Profile(user);
 }
 
 class _Profile extends State<Profile> {
@@ -29,17 +29,8 @@ class _Profile extends State<Profile> {
       textStyle: const TextStyle(fontSize: 15), minimumSize: const Size(150, 30),
       primary: Colors.blue, onPrimary: Colors.white);
 
-  Users user = Users(1, "Ricardo Silva", "ricardo@hotmail.com","password", "https://i.imgur.com/xZ6Ahkx.jpg",
-      [Trips(2, "Salinas",
-          "Visita ás Salinas de Aveiro",
-          "content2",
-          "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Aveiro-Marais_salants-1967_07_29_29.jpg/1200px-Aveiro-Marais_salants-1967_07_29_29.jpg"
-      ),
-        Trips(3, "Gastronomia",
-            "Visita ás melhores ofertas gastronómicas de Aveiro",
-            "content3",
-            "https://media-cdn.tripadvisor.com/media/photo-s/0d/43/90/9b/polvo-a-lagareiro.jpg"
-        )]);
+  _Profile(this.user);
+  final Users user;
 
   @override
   Widget build(BuildContext context){
