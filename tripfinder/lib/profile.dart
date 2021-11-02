@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tripfinder/trips.dart';
 import 'package:tripfinder/user.dart';
 
 import 'mytriplist.dart';

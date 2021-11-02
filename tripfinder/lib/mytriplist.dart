@@ -53,128 +53,79 @@ class _MyTripList extends State<MyTripList> {
                   style: optionStyle
                 )
               ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RoutePage(trip: user.trips[0]),
-                    ),
-                  );
-                },
-                child: Container(
-                  height: 100,
-                  decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.white,), borderRadius: const BorderRadius.all(Radius.circular(20))),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      //The image
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  alignment: FractionalOffset.topCenter,
-                                  image: NetworkImage(user.trips[0].imageurl))),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                //The title
-                                Text(
-                                    user.trips[0].title,
-                                    textAlign: TextAlign.left,
-                                    style: tripTitleStyle
+              Container(
+                height: 350,
+                  child: ListView.builder(
+                    itemCount: (user.trips).length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => RoutePage(trip: user.trips[index]),
                                 ),
-                                //The content
-                                Text(
-                                    user.trips[0].contentShort,
-                                    maxLines: 2,
-                                    textAlign: TextAlign.left,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: contentStyle
-                                ),
-                              ],
+                              );
+                            },
+                            child: Container(
+                              height: 100,
+                              decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.white,), borderRadius: const BorderRadius.all(Radius.circular(20))),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  //The image
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      width: 80,
+                                      height: 80,
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              alignment: FractionalOffset.topCenter,
+                                              image: NetworkImage(user.trips[index].imageurl))),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(right: 8.0),
+                                      child: Container(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            //The title
+                                            Text(
+                                                user.trips[index].title,
+                                                textAlign: TextAlign.left,
+                                                style: tripTitleStyle
+                                            ),
+                                            //The content
+                                            Text(
+                                                user.trips[index].contentShort,
+                                                maxLines: 2,
+                                                textAlign: TextAlign.left,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: contentStyle
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    ],
+                          const Text(''),
+                        ],
+                      );
+                    },
                   ),
-                ),
-              ),
-              const Text(''),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RoutePage(trip: user.trips[1]),
-                    ),
-                  );
-                },
-                child: Container(
-                  height: 100,
-                  decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.white,), borderRadius: const BorderRadius.all(Radius.circular(20))),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      //The image
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  alignment: FractionalOffset.topCenter,
-                                  image: NetworkImage(user.trips[1].imageurl))),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                //The title
-                                Text(
-                                    user.trips[1].title,
-                                    textAlign: TextAlign.left,
-                                    style: tripTitleStyle
-                                ),
-                                //The content
-                                Text(
-                                    user.trips[1].contentShort,
-                                    maxLines: 2,
-                                    textAlign: TextAlign.left,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: contentStyle
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
               ),
               ]
         ),

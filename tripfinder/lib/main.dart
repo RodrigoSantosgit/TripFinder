@@ -162,179 +162,86 @@ class _Home extends State<Home> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Row(
-              children: [
+              children: const [
                 Text('Nearby Trips', style: optionStyle),
                 Spacer(),
                 Text('Aveiro', style: tripTitleStyle),
               ]
             ),
-
-            InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TripPage(trip: lTrips[0]),
-                ),
-              );
-            },
-            child: Container(
-              height: 100,
-              decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.white,), borderRadius: const BorderRadius.all(Radius.circular(20))),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  //The image
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              alignment: FractionalOffset.topCenter,
-                              image: NetworkImage(lTrips[0].imageurl))),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            //The title
-                            Text(
-                              lTrips[0].title,
-                              textAlign: TextAlign.left,
-                              style: tripTitleStyle
-                            ),
-                            //The content
-                            Text(
-                              lTrips[0].contentShort,
-                              maxLines: 2,
-                              textAlign: TextAlign.left,
-                              overflow: TextOverflow.ellipsis,
-                              style: contentStyle
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            ),
-
             Container(
-              height: 100,
-              decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.white,), borderRadius: const BorderRadius.all(Radius.circular(20))),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  //The image
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              alignment: FractionalOffset.topCenter,
-                              image: NetworkImage(lTrips[1].imageurl))),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            //The title
-                            Text(
-                              lTrips[1].title,
-                              textAlign: TextAlign.left,
-                              style: tripTitleStyle
+              height: 350,
+              child: ListView.builder(
+                itemCount: lTrips.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TripPage(trip: lTrips[index]),
                             ),
-                            //The content
-                            Text(
-                              lTrips[1].contentShort,
-                              maxLines: 2,
-                              textAlign: TextAlign.left,
-                              overflow: TextOverflow.ellipsis,
-                              style: contentStyle
-                            ),
-                          ],
+                          );
+                        },
+                        child: Container(
+                          height: 100,
+                          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.white,), borderRadius: const BorderRadius.all(Radius.circular(20))),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              //The image
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          alignment: FractionalOffset.topCenter,
+                                          image: NetworkImage(lTrips[index].imageurl))),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: Container(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        //The title
+                                        Text(
+                                            lTrips[index].title,
+                                            textAlign: TextAlign.left,
+                                            style: tripTitleStyle
+                                        ),
+                                        //The content
+                                        Text(
+                                            lTrips[index].contentShort,
+                                            maxLines: 2,
+                                            textAlign: TextAlign.left,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: contentStyle
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                ],
+                      const Text(''),
+                    ],
+                  );
+                },
               ),
             ),
-
-            Container(
-              height: 100,
-              decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.white,), borderRadius: const BorderRadius.all(Radius.circular(20))),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  //The image
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              alignment: FractionalOffset.topCenter,
-                              image: NetworkImage(lTrips[2].imageurl))),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            //The title
-                            Text(
-                              lTrips[2].title,
-                              textAlign: TextAlign.left,
-                              style: tripTitleStyle
-                            ),
-                            //The content
-                            Text(
-                              lTrips[2].contentShort,
-                              maxLines: 2,
-                              textAlign: TextAlign.left,
-                              overflow: TextOverflow.ellipsis,
-                              style: contentStyle
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-
           ],
         ),
       ),
@@ -379,7 +286,7 @@ class _Stat extends State<Stat> {
                 height:100,
                 child: Row(
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     const Text(
                       'Statistics for ',
                       style: headerStyle,
@@ -388,7 +295,7 @@ class _Stat extends State<Stat> {
                         user.name,
                         style: headerNameStyle
                     ),
-                    Spacer()
+                    const Spacer()
                   ],
                 )
             ),
@@ -410,7 +317,7 @@ class _Stat extends State<Stat> {
                           style: typeStyle
                       ),
                       Text(
-                          DistanceSum(user.trips).toString(),
+                          distanceSum(user.trips).toString(),
                           style: valueStyle
                       )
                     ]
@@ -453,7 +360,7 @@ class _Notification extends State<Notification> {
   }
 }
 
-int DistanceSum(List<Trips> trips){
+int distanceSum(List<Trips> trips){
 
   int sum = 0;
   for(int i=0;i< trips.length;i++){
