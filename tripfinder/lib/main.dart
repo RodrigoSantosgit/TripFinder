@@ -397,7 +397,7 @@ class _Stat extends State<Stat> {
                 child: Column(
                     children: <Widget>[
                       const Text(
-                        'Ammount of trips made',
+                        'Number of trips made',
                         style: typeStyle,
                       ),
                       Text(
