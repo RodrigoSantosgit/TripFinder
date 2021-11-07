@@ -3,6 +3,14 @@ import 'package:tripfinder/trips.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
+final Set<Polyline> route = <Polyline>{
+  const Polyline(
+      polylineId: PolylineId("poly"),
+      color: Colors.blue,
+      points: <LatLng>[LatLng(40.644330, -8.656687), LatLng(40.642702, -8.655329), LatLng(40.641436, -8.655139), LatLng(40.641257, -8.653307), LatLng(40.641515, -8.650096), LatLng(40.639584, -8.645558)]
+    ),
+};
+
 class RoutePage extends StatefulWidget {
   const RoutePage({Key? key, required this.trip}) : super(key: key);
 
@@ -75,6 +83,8 @@ class MapSampleState extends State<MapSample> {
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
             },
+            polylines: route, 
+            
           ),
         ),
     );
