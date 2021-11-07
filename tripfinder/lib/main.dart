@@ -1,5 +1,4 @@
 /// Flutter code sample for BottomNavigationBar
-
 // This example shows a [BottomNavigationBar] as it is used within a [Scaffold]
 // widget. The [BottomNavigationBar] has three [BottomNavigationBarItem]
 // widgets, which means it defaults to [BottomNavigationBarType.fixed], and
@@ -165,7 +164,8 @@ class _Home extends State<Home> {
               children: const [
                 Text('Nearby Trips', style: optionStyle),
                 Spacer(),
-                Text('Aveiro', style: tripTitleStyle),
+                //Text('Aveiro', style: tripTitleStyle),
+                LocationButton(),
               ]
             ),
             Container(
@@ -367,4 +367,43 @@ int distanceSum(List<Trips> trips){
     sum += trips[i].distance;
   }
   return sum;
+}
+
+class LocationButton extends StatefulWidget {
+  const LocationButton({Key? key}) : super(key: key);
+
+  @override
+  State<LocationButton> createState() => _LocationButtonState();
+}
+
+/// This is the private State class that goes with MyStatefulWidget.
+class _LocationButtonState extends State<LocationButton> {
+  String dropdownValue = 'Aveiro';
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_downward),
+      iconSize: 20,
+      elevation: 15,
+      style: const TextStyle(fontSize: 18, color: Colors.blue),
+      underline: Container(
+        height: 2,
+        color: Colors.blue,
+      ),
+      onChanged: (String? newValue) {
+        setState(() {
+          dropdownValue = newValue!;
+        });
+      },
+      items: <String>['Aveiro', 'Porto', 'Lisboa', 'Viseu']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
 }
