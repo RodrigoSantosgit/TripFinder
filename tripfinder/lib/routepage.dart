@@ -7,6 +7,8 @@ import 'dart:async';
 import 'dart:io';
 import 'package:camera/camera.dart';
 
+List<CameraDescription> cameras = [];
+
 final Set<Polyline> route = <Polyline>{
   const Polyline(
       polylineId: PolylineId("poly"),
@@ -98,16 +100,16 @@ class MapSampleState extends State<MapSample> {
     WidgetsFlutterBinding.ensureInitialized();
 
     // Obtain a list of the available cameras on the device.
-    final cameras = await availableCameras();
+    cameras = await availableCameras(); 
 
     // Get a specific camera from the list of available cameras.
-    final firstCamera = cameras.first;
+    //final firstCamera = cameras.first;
 
     if (await Permission.camera.request().isGranted){
-      return TakePictureScreen(camera: firstCamera);
+      return CameraApp();
     }
     else{
-      return TakePictureScreen(camera: firstCamera);
+      return const MapSample();
     }
   }
 
@@ -116,7 +118,7 @@ class MapSampleState extends State<MapSample> {
 /// ************************
 /// ******* Camera *********
 /// ************************
-class TakePictureScreen extends StatefulWidget {
+/*class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({
     Key? key,
     required this.camera,
@@ -222,6 +224,44 @@ class DisplayPictureScreen extends StatelessWidget {
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
       body: Image.file(File(imagePath)),
+    );
+  }
+}*/
+
+class CameraApp extends StatefulWidget {
+  @override
+
+  _CameraAppState createState() => _CameraAppState();
+}
+
+class _CameraAppState extends State<CameraApp> {
+  late CameraController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = CameraController(cameras[0], ResolutionPreset.max);
+    controller.initialize().then((_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!controller.value.isInitialized) {
+      return Container();
+    }
+    return MaterialApp(
+      home: CameraPreview(controller),
     );
   }
 }
