@@ -38,6 +38,7 @@ dependencies:
   camera: ^0.9.4+3
   path_provider:
   path:
+  permission_handler: ^8.2.6
 
 dev_dependencies:
   flutter_test:
