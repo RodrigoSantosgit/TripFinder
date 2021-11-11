@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:tripfinder/trips.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
@@ -85,14 +86,14 @@ class MapSampleState extends State<MapSample> {
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: _doNothing,
+          onPressed: _pictureScreen,
           label: const Text('Take Picture'),
           icon: const Icon(Icons.camera_alt_outlined)
         ),
     );
   }
 
-  Future<StatefulWidget> _doNothing() async {
+  Future<StatefulWidget> _pictureScreen() async {
 
     WidgetsFlutterBinding.ensureInitialized();
 
@@ -102,8 +103,12 @@ class MapSampleState extends State<MapSample> {
     // Get a specific camera from the list of available cameras.
     final firstCamera = cameras.first;
 
-    return TakePictureScreen(camera: firstCamera);
-
+    if (await Permission.camera.request().isGranted){
+      return TakePictureScreen(camera: firstCamera);
+    }
+    else{
+      return TakePictureScreen(camera: firstCamera);
+    }
   }
 
 }
@@ -153,7 +158,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Take a picture')),
+      appBar: AppBar(title: const Text('TripFinder')),
       // You must wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner until the
       // controller has finished initializing.
@@ -213,7 +218,7 @@ class DisplayPictureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Display the Picture')),
+      appBar: AppBar(title: const Text('TripFinder')),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
       body: Image.file(File(imagePath)),
