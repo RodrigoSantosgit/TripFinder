@@ -1,10 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tripfinder/trips.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
-import 'dart:io';
+import 'package:location/location.dart';
 import 'package:camera/camera.dart';
 
 List<CameraDescription> cameras = [];
@@ -68,7 +71,69 @@ class MapSample extends StatefulWidget {
 }
 
 class MapSampleState extends State<MapSample> {
-  Completer<GoogleMapController> _controller = Completer();
+  StreamSubscription? _locationSubscription;
+  GoogleMapController? _controller;
+  Marker? marker;
+  final Location _locationTracker = Location();
+  Circle? circle;
+
+  Future<Uint8List> getMarker() async {
+    ByteData byteData = await DefaultAssetBundle.of(context).load("assets/car_icon.png");
+    return byteData.buffer.asUint8List();
+  }
+
+  void updateMarkerAndCircle(LocationData newLocalData, Uint8List imageData) {
+    LatLng latlng = LatLng(newLocalData.latitude!, newLocalData.longitude!);
+    setState(() {
+      marker = Marker(
+          markerId: const MarkerId("home"),
+          position: latlng,
+          rotation: newLocalData.heading!,
+          draggable: false,
+          zIndex: 2,
+          flat: true,
+          anchor: const Offset(0.5, 0.5),
+          icon: BitmapDescriptor.fromBytes(imageData));
+      circle = Circle(
+          circleId: const CircleId("car"),
+          radius: newLocalData.accuracy!,
+          zIndex: 1,
+          strokeColor: Colors.blue,
+          center: latlng,
+          fillColor: Colors.blue.withAlpha(70));
+    });
+  }
+
+  void getCurrentLocation() async {
+    try {
+
+      Uint8List imageData = await getMarker();
+      var location = await _locationTracker.getLocation();
+
+      updateMarkerAndCircle(location, imageData);
+
+      if (_locationSubscription != null) {
+        _locationSubscription!.cancel();
+      }
+
+
+      _locationSubscription = _locationTracker.onLocationChanged.listen((newLocalData) {
+        if (_controller != null) {
+          _controller!.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+              bearing: 192.8334901395799,
+              target: LatLng(newLocalData.latitude!, newLocalData.longitude!),
+              tilt: 0,
+              zoom: 18.00)));
+          updateMarkerAndCircle(newLocalData, imageData);
+        }
+      });
+
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        debugPrint("Permission Denied");
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,20 +143,23 @@ class MapSampleState extends State<MapSample> {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: GoogleMap(
-            mapType: MapType.normal,
-            initialCameraPosition:  const CameraPosition(target: LatLng(40.628189, -8.652676), zoom: 12),
+            mapType: MapType.hybrid,
+            initialCameraPosition:  const CameraPosition(target: LatLng(40.641696, -8.649772), zoom: 15),
+            markers: Set.of((marker != null) ? [marker!] : []),
+            circles: Set.of((circle != null) ? [circle!] : []),
             onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
+              _controller = controller;
             },
             polylines: route, 
             
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: _pictureScreen,
-          label: const Text('Take Picture'),
-          icon: const Icon(Icons.camera_alt_outlined)
-        ),
+      floatingActionButton: FloatingActionButton(
+        child:Icon(Icons.location_searching),
+          onPressed: () {
+            getCurrentLocation();
+          }
+      ),
     );
   }
 
