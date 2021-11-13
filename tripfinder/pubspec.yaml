@@ -36,8 +36,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_maps_flutter: ^2.1.0
   camera: ^0.9.4+3
-  path_provider:
-  path:
+  path_provider: any
+  path: any
+  gallery_saver: any
   permission_handler: ^8.2.6
   location: ^4.3.0
 
