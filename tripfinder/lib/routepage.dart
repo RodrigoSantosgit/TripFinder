@@ -1,18 +1,14 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tripfinder/trips.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
 import 'package:location/location.dart';
-import 'package:camera/camera.dart';
-
-import 'camerapage.dart';
-
-List<CameraDescription> cameras = [];
 
 final Set<Polyline> route = <Polyline>{
   const Polyline(
@@ -166,55 +162,28 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
-  Future<StatefulWidget> _pictureScreen() async {
+  _pictureScreen() async {
 
-    WidgetsFlutterBinding.ensureInitialized();
+    final ImagePicker _picker = ImagePicker();
 
-    // Obtain a list of the available cameras on the device.
-    cameras = await availableCameras(); 
+    final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
 
-    // Get a specific camera from the list of available cameras.
-    final firstCamera = cameras.first;
-    
-    return TakePictureScreen(camera: firstCamera);
+    DisplayPictureScreen(imagePath: photo!.path);
   }
 
 }
 
-/*class CameraApp extends StatefulWidget {
-  @override
-
-  _CameraAppState createState() => _CameraAppState();
-}
-
-class _CameraAppState extends State<CameraApp> {
-  late CameraController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = CameraController(cameras[0], ResolutionPreset.max);
-    controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
-  }
-
+class DisplayPictureScreen extends StatelessWidget {
+  final String imagePath;
+  const DisplayPictureScreen({Key? key, required this.imagePath})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
-    if (!controller.value.isInitialized) {
-      return Container();
-    }
-    return MaterialApp(
-      home: CameraPreview(controller),
+    return Scaffold(
+      appBar: AppBar(title: const Text('TripFinder')),
+      // The image is stored as a file on the device. Use the `Image.file`
+      // constructor with the given path to display the image.
+      body: Image.file(File(imagePath)),
     );
   }
-}*/
+}
