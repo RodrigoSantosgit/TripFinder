@@ -76,7 +76,7 @@ class MapSampleState extends State<MapSample> {
   Circle? circle;
 
   Future<Uint8List> getMarker() async {
-    ByteData byteData = await DefaultAssetBundle.of(context).load("assets/car_icon.png");
+    ByteData byteData = await DefaultAssetBundle.of(context).load("assets/triangle_icon.png");
     return byteData.buffer.asUint8List();
   }
 
@@ -145,6 +145,7 @@ class MapSampleState extends State<MapSample> {
             initialCameraPosition:  const CameraPosition(target: LatLng(40.641696, -8.649772), zoom: 15),
             markers: Set.of((marker != null) ? [marker!] : []),
             circles: Set.of((circle != null) ? [circle!] : []),
+            zoomControlsEnabled: false,
             onMapCreated: (GoogleMapController controller) {
               _controller = controller;
             },
@@ -152,13 +153,17 @@ class MapSampleState extends State<MapSample> {
             
           ),
         ),
-      floatingActionButton: FloatingActionButton(
-        child:Icon(Icons.location_searching),
-          onPressed: () {
-            getCurrentLocation();
-          }
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.fromLTRB(7.0,0.0,7.0,28.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              FloatingActionButton(child: const Icon(Icons.location_searching), onPressed: () {getCurrentLocation();}),
+              FloatingActionButton(child: const Icon(Icons.camera_alt_outlined), onPressed: _pictureScreen),
+            ]
+          ),
       ),
-      persistentFooterButtons: [TextButton(onPressed: _pictureScreen, child: const Text("Take a Picture!"))],
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
