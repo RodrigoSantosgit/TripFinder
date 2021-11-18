@@ -4,19 +4,12 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+//import 'package:google_map_polyline/google_map_polyline.dart';
 import 'package:tripfinder/trips.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
 import 'package:location/location.dart';
-
-final Set<Polyline> route = <Polyline>{
-  const Polyline(
-      polylineId: PolylineId("poly"),
-      color: Colors.blue,
-      points: <LatLng>[LatLng(40.644330, -8.656687), LatLng(40.642702, -8.655329), LatLng(40.641436, -8.655139), LatLng(40.641257, -8.653307), LatLng(40.641515, -8.650096), LatLng(40.639584, -8.645558)]
-    ),
-};
 
 class RoutePage extends StatefulWidget {
   const RoutePage({Key? key, required this.trip}) : super(key: key);
@@ -70,10 +63,17 @@ class MapSample extends StatefulWidget {
 
 class MapSampleState extends State<MapSample> {
   StreamSubscription? _locationSubscription;
+  StreamSubscription? _camSubscription;
   GoogleMapController? _controller;
   Marker? marker;
   final Location _locationTracker = Location();
   Circle? circle;
+
+  final Set<Polyline> route = <Polyline>{};
+
+  List<LatLng>? routeCoords;
+  /*GoogleMapPolyline googleMapPolyline =
+  new GoogleMapPolyline(apiKey: "AIzaSyDbxG5dtaAYlUwjjNfqUei6CCvSKlTEw44");*/
 
   Future<Uint8List> getMarker() async {
     ByteData byteData = await DefaultAssetBundle.of(context).load("assets/triangle_icon.png");
@@ -114,14 +114,8 @@ class MapSampleState extends State<MapSample> {
         _locationSubscription!.cancel();
       }
 
-
       _locationSubscription = _locationTracker.onLocationChanged.listen((newLocalData) {
         if (_controller != null) {
-          _controller!.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-              bearing: 192.8334901395799,
-              target: LatLng(newLocalData.latitude!, newLocalData.longitude!),
-              tilt: 0,
-              zoom: 18.00)));
           updateMarkerAndCircle(newLocalData, imageData);
         }
       });
@@ -133,24 +127,62 @@ class MapSampleState extends State<MapSample> {
     }
   }
 
+  void moveToPosition() async {
+
+    try {
+      Uint8List imageData = await getMarker();
+
+      if (_camSubscription != null) {
+        _camSubscription!.cancel();
+      }
+
+      _camSubscription = _locationTracker.onLocationChanged.listen((newLocalData) {
+        if (_controller != null) {
+          _controller!.animateCamera(
+              CameraUpdate.newCameraPosition(CameraPosition(
+                  target: LatLng((newLocalData.latitude!), newLocalData.longitude!),
+                  tilt: 0,
+                  zoom: 18.00)));
+          updateMarkerAndCircle(newLocalData, imageData);
+        }
+      });
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        debugPrint("Permission Denied");
+      }
+    }
+  }
+
+  void cancelFollow(){
+    _camSubscription!.cancel();
+  }
+
   @override
+  void initState(){
+    getCurrentLocation();
+    super.initState();
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       body: 
         Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          child: GoogleMap(
-            mapType: MapType.hybrid,
-            initialCameraPosition:  const CameraPosition(target: LatLng(40.641696, -8.649772), zoom: 15),
-            markers: Set.of((marker != null) ? [marker!] : []),
-            circles: Set.of((circle != null) ? [circle!] : []),
-            zoomControlsEnabled: false,
-            onMapCreated: (GoogleMapController controller) {
-              _controller = controller;
+          child: Listener(
+            onPointerDown: (e) {
+              cancelFollow();
             },
-            polylines: route, 
-            
+            child: GoogleMap(
+               mapType: MapType.hybrid,
+               initialCameraPosition:  const CameraPosition(target: LatLng(40.641696, -8.649772), zoom: 15),
+               markers: Set.of((marker != null) ? [marker!] : []),
+               circles: Set.of((circle != null) ? [circle!] : []),
+               zoomControlsEnabled: false,
+               onMapCreated: (GoogleMapController controller) {
+                 _controller = controller;
+               },
+               polylines: route,
+            ),
           ),
         ),
       floatingActionButton: Padding(
@@ -158,7 +190,7 @@ class MapSampleState extends State<MapSample> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              FloatingActionButton(child: const Icon(Icons.location_searching), onPressed: () {getCurrentLocation();}),
+              FloatingActionButton(child: const Icon(Icons.location_searching), onPressed: () {moveToPosition();}),
               FloatingActionButton(child: const Icon(Icons.camera_alt_outlined), onPressed: _pictureScreen),
             ]
           ),
