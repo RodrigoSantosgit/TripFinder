@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "233522429682",
+    "project_id": "tripfinder-270ec",
+    "storage_bucket": "tripfinder-270ec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233522429682:android:4b23836749e84227ff9a6b",
+        "android_client_info": {
+          "package_name": "com.example.tripfinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "233522429682-7jsgnneh1k2lv2i8pmn66nj1kaefm693.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSzsLOH3gu63b9y1RGy0AOMQP9vEIOaAA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "233522429682-7jsgnneh1k2lv2i8pmn66nj1kaefm693.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -38,8 +38,10 @@ dependencies:
   path_provider: any
   path: any
   location: ^4.3.0
-  firebase_core: "^1.10.0"
+  firebase_core: ^1.10.0
+  firebase_auth: ^3.2.0
   image_picker: ^0.8.4+4
+  provider: ^6.0.1
 
 dev_dependencies:
   flutter_test:

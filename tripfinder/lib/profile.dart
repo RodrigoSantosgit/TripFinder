@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
+import 'package:tripfinder/authentication_service.dart';
 import 'package:tripfinder/user.dart';
 
 import 'mytriplist.dart';
@@ -22,6 +24,11 @@ class _Profile extends State<Profile> {
 
   static const TextStyle valueStyle =
   TextStyle(color: Colors.blue);
+
+  final ButtonStyle logoutbuttonStyle =
+  ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      textStyle: const TextStyle(fontSize: 15), minimumSize: const Size(150, 25),
+      primary: Colors.red, onPrimary: Colors.white);
 
   final ButtonStyle buttonStyle =
   ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -105,6 +112,13 @@ class _Profile extends State<Profile> {
                 );
               },
               child: const Text('My Trips'),
+            ),
+            TextButton(
+              style: logoutbuttonStyle,
+              onPressed: () {
+                context.read<AuthenticationService>().signOut();
+              },
+              child: const Text('Log Out'),
             ),
           ],
         ),

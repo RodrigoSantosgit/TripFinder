@@ -6,26 +6,58 @@
 // amber. The `_onItemTapped` function changes the selected item's index
 // and displays a corresponding message in the center of the [Scaffold].
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tripfinder/authentication_service.dart';
 import 'package:tripfinder/profile.dart';
+import 'package:tripfinder/signinpage.dart';
 import 'package:tripfinder/trippage.dart';
 import 'package:tripfinder/trips.dart';
 import 'package:tripfinder/user.dart';
 
-void main() => runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const MyApp());
+}
 
 /// This is the main application widget.
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  static const String _title = 'Flutter Code Sample';
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: _title,
-      home: MyNavBar(),
+    return MultiProvider(
+        providers: [
+          Provider<AuthenticationService>(
+            create: (_) => AuthenticationService(FirebaseAuth.instance),
+          ),
+          StreamProvider(
+            create: (context) => context.read<AuthenticationService>().authStateChanges,
+            initialData: null,
+          ),
+        ],
+      child: const MaterialApp(
+        home: AuthenticationWrapper(),
+      ),
     );
+  }
+}
+
+class AuthenticationWrapper extends StatelessWidget {
+  const AuthenticationWrapper({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context){
+    final firebaseUser = context.watch<User?>();
+
+    if(firebaseUser != null){
+      return const MyNavBar();
+    }
+    return SignInPage();
   }
 }
 
