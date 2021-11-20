@@ -6,6 +6,8 @@
 // amber. The `_onItemTapped` function changes the selected item's index
 // and displays a corresponding message in the center of the [Scaffold].
 
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -16,10 +18,24 @@ import 'package:tripfinder/signinpage.dart';
 import 'package:tripfinder/trippage.dart';
 import 'package:tripfinder/trips.dart';
 import 'package:tripfinder/user.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart' as pathProvider;
+
+import 'boxes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
+  Directory directory = await pathProvider.getApplicationDocumentsDirectory();
+  Hive.init(directory.path);
+
+  Hive.registerAdapter(TripsAdapter());
+  Hive.registerAdapter(UsersAdapter());
+
+  await Hive.openBox<Trips>('trips');
+  await Hive.openBox<Users>('users');
+
   runApp(const MyApp());
 }
 
@@ -55,7 +71,7 @@ class AuthenticationWrapper extends StatelessWidget {
     final firebaseUser = context.watch<User?>();
 
     if(firebaseUser != null){
-      return const MyNavBar();
+      return MyNavBar();
     }
     return SignInPage();
   }
@@ -75,7 +91,7 @@ class _MyNavBar extends State<MyNavBar> {
   int _selectedIndex = 0;
   static final List<Widget> _widgetOptions = <Widget>[
     const Home(title: 'Home'),
-    Stat(user: Users(1, "Ricardo Silva", "ricardo@hotmail.com","password", "https://i.imgur.com/xZ6Ahkx.jpg",
+    Stat(user: Users( "Ricardo Silva", "ricardo@hotmail.com", "https://i.imgur.com/xZ6Ahkx.jpg",
         [Trips(2, 10, "Salinas",
             "Visita ás Salinas de Aveiro",
             "content2",
@@ -88,7 +104,7 @@ class _MyNavBar extends State<MyNavBar> {
           )])
     ),
     const Notification(title: 'Notification'),
-    Profile(user: Users(1, "Ricardo Silva", "ricardo@hotmail.com","password", "https://i.imgur.com/xZ6Ahkx.jpg",
+    Profile(user: Users( "Ricardo Silva", "ricardo@hotmail.com", "https://i.imgur.com/xZ6Ahkx.jpg",
         [Trips(2, 10, "Salinas",
             "Visita ás Salinas de Aveiro",
             "content2",

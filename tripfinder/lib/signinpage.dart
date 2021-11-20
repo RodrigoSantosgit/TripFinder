@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+import 'package:tripfinder/signuppage.dart';
+import 'package:tripfinder/user.dart';
 import 'authentication_service.dart';
 
 class SignInPage extends StatelessWidget {
@@ -50,7 +53,19 @@ class SignInPage extends StatelessWidget {
               );
             },
             child: const Text("Sign in"),
-          )
+          ),
+          TextButton(
+            style: buttonStyle,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SignUpPage(),
+                ),
+              );
+            },
+            child: const Text("Sign up"),
+          ),
         ],
       ),
     );

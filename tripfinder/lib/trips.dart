@@ -1,8 +1,31 @@
+import 'package:hive/hive.dart';
+
 /// ************************************************
 /// ***************** TRIPS ************************
 /// ************************************************
-class Trips {
-  int id, distance;
-  String title, contentShort, contentFull, imageurl;
+
+part 'trips.g.dart';
+
+@HiveType(typeId: 1)
+class Trips extends HiveObject{
+
+  @HiveField(0)
+  int id;
+
+  @HiveField(1)
+  int distance;
+
+  @HiveField(2)
+  String title;
+
+  @HiveField(3)
+  String contentShort;
+
+  @HiveField(4)
+  String contentFull;
+
+  @HiveField(5)
+  String imageurl;
+
   Trips(this.id, this.distance, this.title, this.contentShort, this.contentFull, this.imageurl);
 }

@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 import 'package:tripfinder/authentication_service.dart';
 import 'package:tripfinder/user.dart';
 
+import 'boxes.dart';
 import 'mytriplist.dart';
 
 class Profile extends StatefulWidget {
@@ -38,7 +40,45 @@ class _Profile extends State<Profile> {
   _Profile(this.user);
   final Users user;
 
+  late final Users _currentUser;
+
+  var image;
+
+  getUsers() {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+    final email = user!.email;
+    var box = Boxes.getUsers();
+    List list = box.values.toList();
+    for(var i = 0; i < list.length;i++){
+      Users? tmp = list[i];
+      if(tmp!.email==email) _currentUser = tmp;
+    }
+  }
+
   @override
+  initState(){
+    getUsers();
+    if(_currentUser.profilePic.isEmpty){
+      image = Container(
+        width: 120.0,
+        height: 120.0,
+        child: const Icon(Icons.account_circle, size: 80, color: Colors.grey),
+      );
+    }else{
+      image = Container(
+        width: 120.0,
+        height: 120.0,
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              fit: BoxFit.fill,
+              image: NetworkImage(_currentUser.profilePic),
+            )
+        ),
+      );
+    }
+  }
   Widget build(BuildContext context){
     return Scaffold(
       body: Padding(
@@ -54,21 +94,11 @@ class _Profile extends State<Profile> {
                     style: headerStyle,
                   ),
                   Text(
-                    user.name,
+                    _currentUser.name,
                     style: headerStyle,
                   ),
                   const Spacer(),
-                  Container(
-                    width: 120.0,
-                    height: 120.0,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: NetworkImage(user.profilePic),
-                        )
-                    ),
-                  ),
+                  image,
                 ],
               ),
             ),
@@ -81,7 +111,7 @@ class _Profile extends State<Profile> {
                         style: typeStyle,
                       ),
                       Text(
-                        user.email,
+                        _currentUser.email,
                         style: valueStyle,
                       ),
                       const Text(''),
@@ -90,7 +120,7 @@ class _Profile extends State<Profile> {
                           style: typeStyle
                       ),
                       Text(
-                          (user.trips).length.toString()
+                          (_currentUser.trips).length.toString()
                       )
                     ]
                 )
@@ -107,7 +137,7 @@ class _Profile extends State<Profile> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyTripList(user: user),
+                    builder: (context) => MyTripList(user: _currentUser),
                   ),
                 );
               },
