@@ -140,6 +140,7 @@ class _Profile extends State<Profile> {
               },
               child: const Text('My Trips'),
             ),
+            const Text(''),
             TextButton(
               style: logoutbuttonStyle,
               onPressed: () {
