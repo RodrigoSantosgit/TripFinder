@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 //import 'package:google_map_polyline/google_map_polyline.dart';
 import 'package:tripfinder/trips.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -86,7 +88,7 @@ class MapSampleState extends State<MapSample> {
   new GoogleMapPolyline(apiKey: "AIzaSyDbxG5dtaAYlUwjjNfqUei6CCvSKlTEw44");*/
 
   Future<Uint8List> getMarker() async {
-    ByteData byteData = await DefaultAssetBundle.of(context).load("assets/triangle_icon.png");
+    ByteData byteData = await DefaultAssetBundle.of(this.context).load("assets/triangle_icon.png");
     return byteData.buffer.asUint8List();
   }
 
@@ -240,7 +242,15 @@ class MapSampleState extends State<MapSample> {
 
     final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
 
-    DisplayPictureScreen(imagePath: photo!.path);
+    final String path = await getApplicationDocumentsDirectory().toString();
+    final String fileName = basename(photo!.path); // Filename without extension
+    final String fileExtension = extension(photo.path); // e.g. '.jpg'
+
+    // 6. Save the file by copying it to the new location on the device.
+    File tmpFile = File(photo.path);
+    tmpFile = await tmpFile.copy('$path/$fileName$fileExtension');
+
+    DisplayPictureScreen(imagePath: photo.path);
   }
 
 }
