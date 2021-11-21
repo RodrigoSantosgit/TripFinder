@@ -2,7 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:tripfinder/routepage.dart';
+import 'package:tripfinder/trips.dart';
 import 'package:tripfinder/user.dart';
+
+import 'boxes.dart';
 
 class MyTripList extends StatefulWidget {
   const MyTripList({Key? key, required this.user}) : super(key: key);
@@ -33,7 +36,45 @@ class _MyTripList extends State<MyTripList> {
 
   final Users user;
 
+  /*addTrips(){
+    var box = Boxes.getTrips();
+
+    List<Trips> lTrips = [
+      Trips(1, 15,"Ria de Aveiro",
+          "Passeio ao longo da Ria de Aveiro",
+          "Passeio ao longo da Ria de Aveiro, desfrute desta maravilhosa experiência passando por diversos locais de interesse em Aveiro como o Fórum e a Praça do Peixe.",
+          "https://i2.wp.com/www.portugalnummapa.com/wp-content/uploads/2015/02/moliceiros-na-ria-de-aveiro-e1424799989448.jpg?fit=700%2C498&ssl=1",
+          "Aveiro"
+      ),
+      Trips(2, 10, "Salinas",
+          "Visita ás Salinas de Aveiro",
+          "content2",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Aveiro-Marais_salants-1967_07_29_29.jpg/1200px-Aveiro-Marais_salants-1967_07_29_29.jpg",
+          "Aveiro"
+      ),
+      Trips(3, 20, "Gastronomia",
+          "Visita ás melhores ofertas gastronómicas de Aveiro",
+          "content3",
+          "https://media-cdn.tripadvisor.com/media/photo-s/0d/43/90/9b/polvo-a-lagareiro.jpg",
+          "Aveiro"
+      ),
+      Trips(4, 20, "Aliados",
+          "Visite uma grande referência turística do Porto, a Avenida dos Aliados",
+          "Poderá percorrer a pé toda a região, passear pelas várias ruas extremamente bonitas, visitar vários cafés, a igreja do Carmo, mercado do Bolhão  e estação de são Bento, entre outros",
+          "https://turistaprofissional.com/wp-content/uploads/2013/05/downtownportoPraadaLiberdadeeAliados2.jpg",
+          "Porto"
+      )
+    ];
+    for(var i = 0; i < lTrips.length;i++){
+      box.add(lTrips[i]);
+    }
+  }*/
+
   @override
+  /*initState(){
+    addTrips();
+    super.initState();
+  }*/
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

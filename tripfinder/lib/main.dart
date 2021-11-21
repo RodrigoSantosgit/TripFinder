@@ -91,31 +91,9 @@ class _MyNavBar extends State<MyNavBar> {
   int _selectedIndex = 0;
   static final List<Widget> _widgetOptions = <Widget>[
     const Home(title: 'Home'),
-    Stat(user: Users( "Ricardo Silva", "ricardo@hotmail.com", "https://i.imgur.com/xZ6Ahkx.jpg",
-        [Trips(2, 10, "Salinas",
-            "Visita ás Salinas de Aveiro",
-            "content2",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Aveiro-Marais_salants-1967_07_29_29.jpg/1200px-Aveiro-Marais_salants-1967_07_29_29.jpg"
-        ),
-          Trips(3, 20, "Gastronomia",
-              "Visita ás melhores ofertas gastronómicas de Aveiro",
-              "content3",
-              "https://media-cdn.tripadvisor.com/media/photo-s/0d/43/90/9b/polvo-a-lagareiro.jpg"
-          )])
-    ),
+    const Stat(),
     const Notification(title: 'Notification'),
-    Profile(user: Users( "Ricardo Silva", "ricardo@hotmail.com", "https://i.imgur.com/xZ6Ahkx.jpg",
-        [Trips(2, 10, "Salinas",
-            "Visita ás Salinas de Aveiro",
-            "content2",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Aveiro-Marais_salants-1967_07_29_29.jpg/1200px-Aveiro-Marais_salants-1967_07_29_29.jpg"
-        ),
-          Trips(3, 20, "Gastronomia",
-              "Visita ás melhores ofertas gastronómicas de Aveiro",
-              "content3",
-              "https://media-cdn.tripadvisor.com/media/photo-s/0d/43/90/9b/polvo-a-lagareiro.jpg"
-          )])
-    ),
+    const Profile(),
   ];
 
   void _onItemTapped(int index) {
@@ -173,137 +151,129 @@ class Home extends StatefulWidget {
 
 class _Home extends State<Home> {
 
-  List<Trips> lTrips = [
-    Trips(1, 15,"Ria de Aveiro",
-      "Passeio ao longo da Ria de Aveiro",
-      "Passeio ao longo da Ria de Aveiro, desfrute desta maravilhosa experiência passando por diversos locais de interesse em Aveiro como o Fórum e a Praça do Peixe.",
-      "https://i2.wp.com/www.portugalnummapa.com/wp-content/uploads/2015/02/moliceiros-na-ria-de-aveiro-e1424799989448.jpg?fit=700%2C498&ssl=1"
-    ),
-    Trips(2, 10, "Salinas",
-      "Visita ás Salinas de Aveiro", 
-      "content2", 
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Aveiro-Marais_salants-1967_07_29_29.jpg/1200px-Aveiro-Marais_salants-1967_07_29_29.jpg"
-    ),
-    Trips(3, 20, "Gastronomia",
-      "Visita ás melhores ofertas gastronómicas de Aveiro", 
-      "content3", 
-      "https://media-cdn.tripadvisor.com/media/photo-s/0d/43/90/9b/polvo-a-lagareiro.jpg"
-    )
-  ];
+  late List<Trips> lTrips;
 
-  static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  getTrips() {
+    var box = Boxes.getTrips();
+    lTrips = box.values.toList();
+  }
 
-  static const TextStyle contentStyle =
-      TextStyle(fontSize: 15, color: Colors.grey);
+    static const TextStyle optionStyle =
+    TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  static const TextStyle tripTitleStyle =
-      TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue);
+    static const TextStyle contentStyle =
+    TextStyle(fontSize: 15, color: Colors.grey);
 
-  @override
-  Widget build(BuildContext context){
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Row(
-              children: const [
-                Text('Nearby Trips', style: optionStyle),
-                Spacer(),
-                //Text('Aveiro', style: tripTitleStyle),
-                LocationButton(),
-              ]
-            ),
-            Container(
-              height: 350,
-              child: ListView.builder(
-                itemCount: lTrips.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TripPage(trip: lTrips[index]),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          height: 100,
-                          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.white,), borderRadius: const BorderRadius.all(Radius.circular(20))),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              //The image
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  width: 80,
-                                  height: 80,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          alignment: FractionalOffset.topCenter,
-                                          image: NetworkImage(lTrips[index].imageurl))),
-                                ),
+    static const TextStyle tripTitleStyle =
+    TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue);
+
+    @override
+    initState() {
+      getTrips();
+      super.initState();
+    }
+    Widget build(BuildContext context){
+      return Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Row(
+                  children: const [
+                    Text('Nearby Trips', style: optionStyle),
+                    Spacer(),
+                    //Text('Aveiro', style: tripTitleStyle),
+                    LocationButton(),
+                  ]
+              ),
+              Container(
+                height: 350,
+                child: ListView.builder(
+                  itemCount: lTrips.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TripPage(trip: lTrips[index]),
                               ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
+                            );
+                          },
+                          child: Container(
+                            height: 100,
+                            decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.white,), borderRadius: const BorderRadius.all(Radius.circular(20))),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                //The image
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
                                   child: Container(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        //The title
-                                        Text(
-                                            lTrips[index].title,
-                                            textAlign: TextAlign.left,
-                                            style: tripTitleStyle
-                                        ),
-                                        //The content
-                                        Text(
-                                            lTrips[index].contentShort,
-                                            maxLines: 2,
-                                            textAlign: TextAlign.left,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: contentStyle
-                                        ),
-                                      ],
-                                    ),
+                                    width: 80,
+                                    height: 80,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            alignment: FractionalOffset.topCenter,
+                                            image: NetworkImage(lTrips[index].imageurl))),
                                   ),
                                 ),
-                              )
-                            ],
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: Container(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          //The title
+                                          Text(
+                                              lTrips[index].title,
+                                              textAlign: TextAlign.left,
+                                              style: tripTitleStyle
+                                          ),
+                                          //The content
+                                          Text(
+                                              lTrips[index].contentShort,
+                                              maxLines: 2,
+                                              textAlign: TextAlign.left,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: contentStyle
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      const Text(''),
-                    ],
-                  );
-                },
+                        const Text(''),
+                      ],
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
-}
+
 
 class Stat extends StatefulWidget {
-  const Stat({Key? key, required this.user}) : super(key: key);
-
-  final Users user;
+  const Stat({Key? key}) : super(key: key);
 
   @override
-  State<Stat> createState() => _Stat(user);
+  State<Stat> createState() => _Stat();
 }
 
 class _Stat extends State<Stat> {
@@ -320,10 +290,25 @@ class _Stat extends State<Stat> {
   static const TextStyle valueStyle =
   TextStyle(color: Colors.blue);
 
-  _Stat(this.user);
-  final Users user;
+  late final Users _currentUser;
+
+  getUsers() {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+    final email = user!.email;
+    var box = Boxes.getUsers();
+    List list = box.values.toList();
+    for(var i = 0; i < list.length;i++){
+      Users? tmp = list[i];
+      if(tmp!.email==email) _currentUser = tmp;
+    }
+  }
 
   @override
+  initState(){
+    getUsers();
+    super.initState();
+  }
   Widget build(BuildContext context){
     return Scaffold(
       body: Padding(
@@ -340,7 +325,7 @@ class _Stat extends State<Stat> {
                       style: headerStyle,
                     ),
                     Text(
-                        user.name,
+                        _currentUser.name,
                         style: headerNameStyle
                     ),
                     const Spacer()
@@ -356,7 +341,7 @@ class _Stat extends State<Stat> {
                         style: typeStyle,
                       ),
                       Text(
-                        (user.trips).length.toString(),
+                        (_currentUser.trips).length.toString(),
                         style: valueStyle,
                       ),
                       const Text(''),
@@ -365,7 +350,7 @@ class _Stat extends State<Stat> {
                           style: typeStyle
                       ),
                       Text(
-                          distanceSum(user.trips).toString(),
+                          distanceSum(_currentUser.trips).toString(),
                           style: valueStyle
                       )
                     ]
@@ -445,7 +430,7 @@ class _LocationButtonState extends State<LocationButton> {
           dropdownValue = newValue!;
         });
       },
-      items: <String>['Aveiro', 'Porto', 'Lisboa', 'Viseu']
+      items: <String>['Todos', 'Aveiro', 'Porto']
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,

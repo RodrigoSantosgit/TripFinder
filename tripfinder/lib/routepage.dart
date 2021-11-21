@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +11,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
 import 'package:location/location.dart';
+import 'package:tripfinder/user.dart';
+
+import 'boxes.dart';
 
 class RoutePage extends StatefulWidget {
   const RoutePage({Key? key, required this.trip}) : super(key: key);
@@ -47,7 +51,7 @@ class _RoutePage extends State<RoutePage> {
                   style: tripTitleStyle
               ),
 
-              const MapSample()
+              MapSample(trip: trip)
             ],
           ),
     );
@@ -55,10 +59,12 @@ class _RoutePage extends State<RoutePage> {
 }
 
 class MapSample extends StatefulWidget {
-  const MapSample({Key? key}) : super(key: key);
+  const MapSample({Key? key, required this.trip}) : super(key: key);
+
+  final Trips trip;
 
   @override
-  State<MapSample> createState() => MapSampleState();
+  State<MapSample> createState() => MapSampleState(trip);
 }
 
 class MapSampleState extends State<MapSample> {
@@ -68,6 +74,10 @@ class MapSampleState extends State<MapSample> {
   Marker? marker;
   final Location _locationTracker = Location();
   Circle? circle;
+
+  MapSampleState(this.trip);
+
+  final Trips trip;
 
   final Set<Polyline> route = <Polyline>{};
 
@@ -157,6 +167,26 @@ class MapSampleState extends State<MapSample> {
     _camSubscription!.cancel();
   }
 
+  void addTripDone(){
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+    final email = user!.email;
+    var box = Boxes.getUsers();
+    List list = box.values.toList();
+    for(var i = 0; i < list.length;i++){
+      Users? tmp = list[i];
+      if(tmp!.email==email) {
+        List<Trips> tmp2 = tmp.trips;
+        for (var j = 0; j < tmp2.length; j++) {
+          if (tmp2[j].id == trip.id) return;
+        }
+        tmp2.add(trip);
+        list[i].trips = tmp2;
+        list[i].save();
+      }
+    }
+  }
+
   @override
   void initState(){
     getCurrentLocation();
@@ -190,8 +220,13 @@ class MapSampleState extends State<MapSample> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              FloatingActionButton(child: const Icon(Icons.location_searching), onPressed: () {moveToPosition();}),
-              FloatingActionButton(child: const Icon(Icons.camera_alt_outlined), onPressed: _pictureScreen),
+              FloatingActionButton(heroTag: "btn1",child: const Icon(Icons.location_searching), onPressed: () {moveToPosition();}),
+              FloatingActionButton(heroTag: "btn2",child: const Icon(Icons.done), onPressed: () {
+                addTripDone();
+                int count = 0;
+                Navigator.of(context).popUntil((_) => count++ >= 2);
+              }),
+              FloatingActionButton(heroTag: "btn3",child: const Icon(Icons.camera_alt_outlined), onPressed: _pictureScreen),
             ]
           ),
       ),

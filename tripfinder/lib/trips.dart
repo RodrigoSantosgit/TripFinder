@@ -27,5 +27,8 @@ class Trips extends HiveObject{
   @HiveField(5)
   String imageurl;
 
-  Trips(this.id, this.distance, this.title, this.contentShort, this.contentFull, this.imageurl);
+  @HiveField(6)
+  String location;
+
+  Trips(this.id, this.distance, this.title, this.contentShort, this.contentFull, this.imageurl, this.location);
 }

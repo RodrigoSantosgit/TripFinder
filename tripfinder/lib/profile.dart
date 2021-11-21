@@ -8,12 +8,11 @@ import 'boxes.dart';
 import 'mytriplist.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({Key? key, required this.user}) : super(key: key);
+  const Profile({Key? key}) : super(key: key);
 
-  final Users user;
 
   @override
-  State<Profile> createState() => _Profile(user);
+  State<Profile> createState() => _Profile();
 }
 
 class _Profile extends State<Profile> {
@@ -36,9 +35,6 @@ class _Profile extends State<Profile> {
   ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       textStyle: const TextStyle(fontSize: 15), minimumSize: const Size(150, 25),
       primary: Colors.blue, onPrimary: Colors.white);
-
-  _Profile(this.user);
-  final Users user;
 
   late final Users _currentUser;
 
@@ -78,6 +74,7 @@ class _Profile extends State<Profile> {
         ),
       );
     }
+    super.initState();
   }
   Widget build(BuildContext context){
     return Scaffold(
