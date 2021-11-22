@@ -10,7 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tripfinder/trips.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
-
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:location/location.dart';
 import 'package:tripfinder/user.dart';
 
@@ -274,19 +274,31 @@ class MapSampleState extends State<MapSample> {
 
     final ImagePicker _picker = ImagePicker();
 
-    final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+    XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+
+    final file = File(photo!.path);
+
+    final imageName = '${DateTime.now().millisecondsSinceEpoch}.png';
+
+    final firebaseStorageRef = FirebaseStorage.instance
+        .ref()
+        .child('images/$imageName');
+
+    final uploadTask = firebaseStorageRef.putFile(file);
+    final taskSnapshot = await uploadTask.whenComplete(() => null);
+
+    //uploadImageToFirebase(photo!);
 
     //Directory dir = await getApplicationDocumentsDirectory();
-    Directory? dir = await getExternalStorageDirectory();
+    //Directory? dir = await getExternalStorageDirectory();
     
-    String path = dir!.path;
+    //String path = dir!.path;
 
-    photo!.saveTo(path);
+    //photo!.saveTo(path);
 
     //final String fileName = basename(photo!.path); // Filename without extension
     //final String fileExtension = extension(photo.path); // e.g. '.jpg'
 
-    // 6. Save the file by copying it to the new location on the device.
     //File tmpFile = File(photo.path);
     //tmpFile = await tmpFile.copy('$path/$fileName$fileExtension');
 
