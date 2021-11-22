@@ -5,12 +5,13 @@ import 'package:tripfinder/trips.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class TripGallery extends StatefulWidget {
-  const TripGallery({Key? key, required this.trip}) : super(key: key);
+  const TripGallery({Key? key, required this.photos, required this.trip}) : super(key: key);
 
+  final List photos;
   final Trips trip;
 
   @override
-  State<TripGallery> createState() => _TripGallery(trip);
+  State<TripGallery> createState() => _TripGallery(photos, trip);
 }
 
 class _TripGallery extends State<TripGallery> {
@@ -21,29 +22,10 @@ class _TripGallery extends State<TripGallery> {
   static const TextStyle contentStyle =
       TextStyle(fontSize: 15, color: Colors.black);
 
-  _TripGallery(this.trip);
+  _TripGallery(this.photos,this.trip);
 
+  final List photos;
   final Trips trip;
-
-  late final List tripimages = _listAll();
-
-  List _listAll() {
-
-    List images = [];
-    final firebaseStorageRef = FirebaseStorage.instance
-          .ref()
-          .child('images/${trip.id}');
-
-    // [START storage_list_all]
-    // Create a reference under which you want to list
-
-    // Find all the prefixes and items.
-    firebaseStorageRef.listAll().then((res) => {
-      res.items.forEach((element) {images.add(element);})
-    });
-  // [END storage_list_all]
-    return images;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,20 +43,68 @@ class _TripGallery extends State<TripGallery> {
             children: [
               Text(trip.title, style: optionStyle, textAlign: TextAlign.center),
 
-              ListView.builder(
-                  itemCount: tripimages.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Image(image: tripimages[index])
-                      ]
-                    );
-                  }
+              Container(
+                height: 400,
+                  child: GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisSpacing: 0,
+                        mainAxisSpacing: 0,
+                        crossAxisCount: 3,
+                      ),
+                      itemCount: photos.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ImageDisplay(
+                                    image: photos[index],
+                              ),
+                            ));
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(photos[index]),
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                  )
               )
             ]
           ),
       )
     ),
+    );
+  }
+}
+
+class ImageDisplay extends StatelessWidget{
+  ImageDisplay({Key? key, required this.image}) : super(key: key);
+  final String image;
+
+  @override
+  Widget build(BuildContext context) {
+    body: return Scaffold(
+      appBar: AppBar(
+        title: const Text('TripFinder'),
+        backgroundColor: Colors.black,
+      ),
+      body: Center(child:
+      AspectRatio(
+        aspectRatio: 1,
+        child: Container(
+          width: double.infinity,
+          child: Image(
+            image: NetworkImage(image),
+          ),
+        ),
+      ),
+      ),
     );
   }
 }
