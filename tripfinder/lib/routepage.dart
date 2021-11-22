@@ -93,26 +93,24 @@ class MapSampleState extends State<MapSample> {
 
   void updateMarkerAndCircle(LocationData newLocalData, Uint8List imageData) {
     LatLng latlng = LatLng(newLocalData.latitude!, newLocalData.longitude!);
-    if (this.mounted) {
-      setState(() {
-        marker = Marker(
-            markerId: const MarkerId("home"),
-            position: latlng,
-            rotation: newLocalData.heading!,
-            draggable: false,
-            zIndex: 2,
-            flat: true,
-            anchor: const Offset(0.5, 0.5),
-            icon: BitmapDescriptor.fromBytes(imageData));
-        circle = Circle(
-            circleId: const CircleId("car"),
-            radius: newLocalData.accuracy!,
-            zIndex: 1,
-            strokeColor: Colors.blue,
-            center: latlng,
-            fillColor: Colors.blue.withAlpha(70));
-      });
-    }
+    setState(() {
+      marker = Marker(
+          markerId: const MarkerId("home"),
+          position: latlng,
+          rotation: newLocalData.heading!,
+          draggable: false,
+          zIndex: 2,
+          flat: true,
+          anchor: const Offset(0.5, 0.5),
+          icon: BitmapDescriptor.fromBytes(imageData));
+      circle = Circle(
+          circleId: const CircleId("car"),
+          radius: newLocalData.accuracy!,
+          zIndex: 1,
+          strokeColor: Colors.blue,
+          center: latlng,
+          fillColor: Colors.blue.withAlpha(70));
+    });
   }
 
   void getCurrentLocation() async {
@@ -167,9 +165,7 @@ class MapSampleState extends State<MapSample> {
   }
 
   void cancelFollow(){
-    if (_camSubscription != null) {
-      _camSubscription!.cancel();
-    }
+    _camSubscription!.cancel();
   }
 
   void addTripDone(){
@@ -261,18 +257,16 @@ class MapSampleState extends State<MapSample> {
       result.points.forEach((PointLatLng point){
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
-      if (this.mounted) {
-        setState(() {
-          route.add(
-              Polyline(
-                  width: 10,
-                  polylineId: PolylineId('polyLine'),
-                  color: Color(0xFF08A5CB),
-                  points: polylineCoordinates
-              )
-          );
-        });
-      }
+      setState(() {
+        route.add(
+            Polyline(
+              width: 10,
+              polylineId: PolylineId('polyLine'),
+              color: Color(0xFF08A5CB),
+              points: polylineCoordinates
+          )
+        );
+      });
     }
   }
 
@@ -288,25 +282,10 @@ class MapSampleState extends State<MapSample> {
 
     final firebaseStorageRef = FirebaseStorage.instance
         .ref()
-        .child('images/$imageName');
+        .child('images/${trip.id}/$imageName');
 
     final uploadTask = firebaseStorageRef.putFile(file);
     final taskSnapshot = await uploadTask.whenComplete(() => null);
-
-    //uploadImageToFirebase(photo!);
-
-    //Directory dir = await getApplicationDocumentsDirectory();
-    //Directory? dir = await getExternalStorageDirectory();
-    
-    //String path = dir!.path;
-
-    //photo!.saveTo(path);
-
-    //final String fileName = basename(photo!.path); // Filename without extension
-    //final String fileExtension = extension(photo.path); // e.g. '.jpg'
-
-    //File tmpFile = File(photo.path);
-    //tmpFile = await tmpFile.copy('$path/$fileName$fileExtension');
 
     DisplayPictureScreen(imagePath: photo.path);
   }
@@ -320,6 +299,7 @@ class DisplayPictureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text('TripFinder')),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
       body: Image.file(File(imagePath)),

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:tripfinder/routepage.dart';
+import 'package:tripfinder/tripgallery.dart';
 import 'package:tripfinder/trips.dart';
 
 class TripPage extends StatefulWidget {
@@ -74,6 +75,19 @@ class _TripPage extends State<TripPage> {
               );
                 },
                 child: const Text(' Start Trip '),
+              ),
+
+              ElevatedButton(
+                style: buttonStyle,
+                onPressed: () {
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TripGallery(trip: trip),
+                  ),
+              );
+                },
+                child: const Text(' Trip Gallery '),
               ),
 
             ]
