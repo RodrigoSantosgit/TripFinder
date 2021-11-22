@@ -93,24 +93,26 @@ class MapSampleState extends State<MapSample> {
 
   void updateMarkerAndCircle(LocationData newLocalData, Uint8List imageData) {
     LatLng latlng = LatLng(newLocalData.latitude!, newLocalData.longitude!);
-    setState(() {
-      marker = Marker(
-          markerId: const MarkerId("home"),
-          position: latlng,
-          rotation: newLocalData.heading!,
-          draggable: false,
-          zIndex: 2,
-          flat: true,
-          anchor: const Offset(0.5, 0.5),
-          icon: BitmapDescriptor.fromBytes(imageData));
-      circle = Circle(
-          circleId: const CircleId("car"),
-          radius: newLocalData.accuracy!,
-          zIndex: 1,
-          strokeColor: Colors.blue,
-          center: latlng,
-          fillColor: Colors.blue.withAlpha(70));
-    });
+    if (this.mounted) {
+      setState(() {
+        marker = Marker(
+            markerId: const MarkerId("home"),
+            position: latlng,
+            rotation: newLocalData.heading!,
+            draggable: false,
+            zIndex: 2,
+            flat: true,
+            anchor: const Offset(0.5, 0.5),
+            icon: BitmapDescriptor.fromBytes(imageData));
+        circle = Circle(
+            circleId: const CircleId("car"),
+            radius: newLocalData.accuracy!,
+            zIndex: 1,
+            strokeColor: Colors.blue,
+            center: latlng,
+            fillColor: Colors.blue.withAlpha(70));
+      });
+    }
   }
 
   void getCurrentLocation() async {
@@ -165,7 +167,9 @@ class MapSampleState extends State<MapSample> {
   }
 
   void cancelFollow(){
-    _camSubscription!.cancel();
+    if (_camSubscription != null) {
+      _camSubscription!.cancel();
+    }
   }
 
   void addTripDone(){
@@ -257,16 +261,18 @@ class MapSampleState extends State<MapSample> {
       result.points.forEach((PointLatLng point){
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
-      setState(() {
-        route.add(
-            Polyline(
-              width: 10,
-              polylineId: PolylineId('polyLine'),
-              color: Color(0xFF08A5CB),
-              points: polylineCoordinates
-          )
-        );
-      });
+      if (this.mounted) {
+        setState(() {
+          route.add(
+              Polyline(
+                  width: 10,
+                  polylineId: PolylineId('polyLine'),
+                  color: Color(0xFF08A5CB),
+                  points: polylineCoordinates
+              )
+          );
+        });
+      }
     }
   }
 
