@@ -155,6 +155,9 @@ class _Home extends State<Home> {
 
   getTrips() {
     var box = Boxes.getTrips();
+    /*box.clear();
+    var box2 = Boxes.getUsers();
+    box2.clear();*/
     lTrips = box.values.toList();
   }
 

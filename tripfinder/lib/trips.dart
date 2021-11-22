@@ -1,3 +1,4 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hive/hive.dart';
 
 /// ************************************************
@@ -30,5 +31,11 @@ class Trips extends HiveObject{
   @HiveField(6)
   String location;
 
-  Trips(this.id, this.distance, this.title, this.contentShort, this.contentFull, this.imageurl, this.location);
+  @HiveField(7)
+  double lat;
+
+  @HiveField(8)
+  double lng;
+
+  Trips(this.id, this.distance, this.title, this.contentShort, this.contentFull, this.imageurl, this.location, this.lat, this.lng);
 }

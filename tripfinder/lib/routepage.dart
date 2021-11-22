@@ -4,10 +4,9 @@ import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-//import 'package:google_map_polyline/google_map_polyline.dart';
 import 'package:tripfinder/trips.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
@@ -76,16 +75,16 @@ class MapSampleState extends State<MapSample> {
   Marker? marker;
   final Location _locationTracker = Location();
   Circle? circle;
+  late LatLng _currentLocation;
+  late LatLng _destination;
 
   MapSampleState(this.trip);
 
   final Trips trip;
 
-  final Set<Polyline> route = <Polyline>{};
-
-  List<LatLng>? routeCoords;
-  /*GoogleMapPolyline googleMapPolyline =
-  new GoogleMapPolyline(apiKey: "AIzaSyDbxG5dtaAYlUwjjNfqUei6CCvSKlTEw44");*/
+  Set<Polyline> route = <Polyline>{};
+  List<LatLng> polylineCoordinates = [];
+  PolylinePoints? polylinePoints;
 
   Future<Uint8List> getMarker() async {
     ByteData byteData = await DefaultAssetBundle.of(this.context).load("assets/triangle_icon.png");
@@ -128,6 +127,8 @@ class MapSampleState extends State<MapSample> {
 
       _locationSubscription = _locationTracker.onLocationChanged.listen((newLocalData) {
         if (_controller != null) {
+          _currentLocation = LatLng(newLocalData.latitude!, newLocalData.longitude!);
+          setPolyLines();
           updateMarkerAndCircle(newLocalData, imageData);
         }
       });
@@ -142,8 +143,6 @@ class MapSampleState extends State<MapSample> {
   void moveToPosition() async {
 
     try {
-      Uint8List imageData = await getMarker();
-
       if (_camSubscription != null) {
         _camSubscription!.cancel();
       }
@@ -152,10 +151,10 @@ class MapSampleState extends State<MapSample> {
         if (_controller != null) {
           _controller!.animateCamera(
               CameraUpdate.newCameraPosition(CameraPosition(
+                  bearing: newLocalData.heading!,
                   target: LatLng((newLocalData.latitude!), newLocalData.longitude!),
                   tilt: 0,
                   zoom: 18.00)));
-          updateMarkerAndCircle(newLocalData, imageData);
         }
       });
     } on PlatformException catch (e) {
@@ -189,9 +188,19 @@ class MapSampleState extends State<MapSample> {
     }
   }
 
+  void initTripPoints(){
+    _currentLocation = LatLng(trip.lat, trip.lng);
+    _destination = LatLng(trip.lat, trip.lng);
+  }
+
   @override
   void initState(){
+
     getCurrentLocation();
+    initTripPoints();
+
+    polylinePoints = PolylinePoints();
+
     super.initState();
   }
   Widget build(BuildContext context) {
@@ -206,12 +215,13 @@ class MapSampleState extends State<MapSample> {
             },
             child: GoogleMap(
                mapType: MapType.hybrid,
-               initialCameraPosition:  const CameraPosition(target: LatLng(40.641696, -8.649772), zoom: 15),
+               initialCameraPosition:  CameraPosition(target: _destination, zoom: 15),
                markers: Set.of((marker != null) ? [marker!] : []),
                circles: Set.of((circle != null) ? [circle!] : []),
                zoomControlsEnabled: false,
                onMapCreated: (GoogleMapController controller) {
                  _controller = controller;
+                 setPolyLines();
                },
                polylines: route,
             ),
@@ -234,6 +244,30 @@ class MapSampleState extends State<MapSample> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
+  }
+
+  void setPolyLines() async {
+    PolylineResult result = await polylinePoints!.getRouteBetweenCoordinates(
+        "AIzaSyDbxG5dtaAYlUwjjNfqUei6CCvSKlTEw44",
+        PointLatLng(_currentLocation.latitude, _currentLocation.longitude),
+        PointLatLng(_destination.latitude, _destination.longitude));
+    route.clear();
+    polylineCoordinates = [];
+    if(result.status == 'OK'){
+      result.points.forEach((PointLatLng point){
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+      setState(() {
+        route.add(
+            Polyline(
+              width: 10,
+              polylineId: PolylineId('polyLine'),
+              color: Color(0xFF08A5CB),
+              points: polylineCoordinates
+          )
+        );
+      });
+    }
   }
 
   _pictureScreen() async {
