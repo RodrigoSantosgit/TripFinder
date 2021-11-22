@@ -242,13 +242,19 @@ class MapSampleState extends State<MapSample> {
 
     final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
 
-    final String path = await getApplicationDocumentsDirectory().toString();
-    final String fileName = basename(photo!.path); // Filename without extension
-    final String fileExtension = extension(photo.path); // e.g. '.jpg'
+    //Directory dir = await getApplicationDocumentsDirectory();
+    Directory? dir = await getExternalStorageDirectory();
+    
+    String path = dir!.path;
+
+    photo!.saveTo(path);
+
+    //final String fileName = basename(photo!.path); // Filename without extension
+    //final String fileExtension = extension(photo.path); // e.g. '.jpg'
 
     // 6. Save the file by copying it to the new location on the device.
-    File tmpFile = File(photo.path);
-    tmpFile = await tmpFile.copy('$path/$fileName$fileExtension');
+    //File tmpFile = File(photo.path);
+    //tmpFile = await tmpFile.copy('$path/$fileName$fileExtension');
 
     DisplayPictureScreen(imagePath: photo.path);
   }
