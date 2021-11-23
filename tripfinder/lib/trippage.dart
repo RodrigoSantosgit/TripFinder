@@ -1,6 +1,5 @@
 // ignore_for_file: file_names
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:tripfinder/routepage.dart';
 import 'package:tripfinder/tripgallery.dart';
@@ -32,38 +31,7 @@ class _TripPage extends State<TripPage> {
 
   final Trips trip;
 
-  late List tripimages = _listAll();
-
-  List _listAll() {
-
-    final firebaseStorageRef = FirebaseStorage.instance
-        .ref()
-        .child('images/${trip.id}');
-
-    List images = [];
-    // [START storage_list_all]
-    // Create a reference under which you want to list
-
-    // Find all the prefixes and items.
-    firebaseStorageRef.listAll().then((res) => {
-      res.items.forEach((element) async {
-        var url;
-        try{
-          url = await element.getDownloadURL();
-          images.add(url);
-        } on Exception catch(e){
-          print("error");
-        }
-      })
-    });
-    // [END storage_list_all]
-    return images;
-  }
-
   @override
-  initState(){
-    super.initState();
-  }
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -115,7 +83,7 @@ class _TripPage extends State<TripPage> {
                   Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TripGallery(photos: tripimages, trip: trip),
+                    builder: (context) => TripGallery(trip: trip),
                   ),
               );
                 },

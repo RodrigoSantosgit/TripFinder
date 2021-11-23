@@ -5,13 +5,12 @@ import 'package:tripfinder/trips.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class TripGallery extends StatefulWidget {
-  const TripGallery({Key? key, required this.photos, required this.trip}) : super(key: key);
+  const TripGallery({Key? key, required this.trip}) : super(key: key);
 
-  final List photos;
   final Trips trip;
 
   @override
-  State<TripGallery> createState() => _TripGallery(photos, trip);
+  State<TripGallery> createState() => _TripGallery(trip);
 }
 
 class _TripGallery extends State<TripGallery> {
@@ -19,15 +18,42 @@ class _TripGallery extends State<TripGallery> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  static const TextStyle contentStyle =
-      TextStyle(fontSize: 15, color: Colors.black);
+  _TripGallery(this.trip);
 
-  _TripGallery(this.photos,this.trip);
-
-  final List photos;
   final Trips trip;
 
+  late List tripimages = [];
+
+  _listAll() {
+
+    final firebaseStorageRef = FirebaseStorage.instance
+        .ref()
+        .child('images/${trip.id}');
+
+    // [START storage_list_all]
+    // Create a reference under which you want to list
+
+    // Find all the prefixes and items.
+    firebaseStorageRef.listAll().then((res) => {
+      res.items.forEach((element) async {
+        var url;
+        try{
+          url = await element.getDownloadURL();
+          setState(() {
+            tripimages.add(url);
+          });
+        } on Exception catch(e){
+          print("error: "+e.toString());
+        }
+      })
+    });
+  }
+
   @override
+  initState(){
+    super.initState();
+    _listAll();
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -46,12 +72,13 @@ class _TripGallery extends State<TripGallery> {
               Container(
                 height: 400,
                   child: GridView.builder(
+                      shrinkWrap: true,
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisSpacing: 0,
-                        mainAxisSpacing: 0,
+                        crossAxisSpacing: 2,
+                        mainAxisSpacing: 2,
                         crossAxisCount: 3,
                       ),
-                      itemCount: photos.length,
+                      itemCount: tripimages.length,
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () {
@@ -59,7 +86,7 @@ class _TripGallery extends State<TripGallery> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ImageDisplay(
-                                    image: photos[index],
+                                    image: tripimages[index],
                               ),
                             ));
                           },
@@ -67,7 +94,7 @@ class _TripGallery extends State<TripGallery> {
                             decoration: BoxDecoration(
                               image: DecorationImage(
                                 fit: BoxFit.cover,
-                                image: NetworkImage(photos[index]),
+                                image: NetworkImage(tripimages[index]),
                               ),
                             ),
                           ),
@@ -89,7 +116,7 @@ class ImageDisplay extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    body: return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: const Text('TripFinder'),
         backgroundColor: Colors.black,
