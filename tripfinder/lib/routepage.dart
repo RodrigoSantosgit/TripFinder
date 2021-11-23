@@ -4,9 +4,10 @@ import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
+//import 'package:path_provider/path_provider.dart';
 import 'package:tripfinder/trips.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
@@ -15,6 +16,9 @@ import 'package:location/location.dart';
 import 'package:tripfinder/user.dart';
 
 import 'boxes.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class RoutePage extends StatefulWidget {
   const RoutePage({Key? key, required this.trip}) : super(key: key);
@@ -172,7 +176,7 @@ class MapSampleState extends State<MapSample> {
     }
   }
 
-  void addTripDone(){
+  void addTripDone() {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     final email = user!.email;
@@ -190,6 +194,24 @@ class MapSampleState extends State<MapSample> {
         list[i].save();
       }
     }
+
+    notifyTripDone();
+  }
+
+  Future<void> notifyTripDone() async{
+    
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails('tripfinder', 'tripfinder_tripdone',
+        channelDescription: 'channel to emit trip done notifications',
+        importance: Importance.max,
+        priority: Priority.high,
+        ticker: 'ticker');
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0, 'TripFinder', 'Trip complete! See you next trip!', platformChannelSpecifics,
+        payload: 'Trip complete! See you next trip!');
+
   }
 
   void initTripPoints(){
