@@ -92,7 +92,6 @@ class _MyNavBar extends State<MyNavBar> {
   static final List<Widget> _widgetOptions = <Widget>[
     const Home(title: 'Home'),
     const Stat(),
-    const Notification(title: 'Notification'),
     const Profile(),
   ];
 
@@ -121,10 +120,6 @@ class _MyNavBar extends State<MyNavBar> {
           BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart),
             label: 'Statistics',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notification_important_outlined),
-            label: 'Notifications',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
@@ -360,36 +355,6 @@ class _Stat extends State<Stat> {
                 )
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class Notification extends StatefulWidget {
-  const Notification({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<Notification> createState() => _Notification();
-}
-
-class _Notification extends State<Notification> {
-
-  static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-
-  @override
-  Widget build(BuildContext context){
-    return const Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Align(
-          child: Text(
-            'Notifications',
-            style: optionStyle,
-          ),
         ),
       ),
     );

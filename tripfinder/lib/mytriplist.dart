@@ -1,10 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:tripfinder/routepage.dart';
 import 'package:tripfinder/user.dart';
-
-import 'boxes.dart';
 
 class MyTripList extends StatefulWidget {
   const MyTripList({Key? key, required this.user}) : super(key: key);
@@ -62,16 +59,7 @@ class _MyTripList extends State<MyTripList> {
                     itemBuilder: (context, index) {
                       return Column(
                         children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => RoutePage(trip: user.trips[index]),
-                                ),
-                              );
-                            },
-                            child: Container(
+                          Container(
                               height: 100,
                               decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.white,), borderRadius: const BorderRadius.all(Radius.circular(20))),
                               child: Row(
@@ -122,7 +110,6 @@ class _MyTripList extends State<MyTripList> {
                                 ],
                               ),
                             ),
-                          ),
                           const Text(''),
                         ],
                       );
